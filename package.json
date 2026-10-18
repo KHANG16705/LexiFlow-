@@ -1,0 +1,1 @@
+{"name":"lexiflow","private":true,"type":"module","scripts":{"start":"node scripts/start.mjs","setup":"node scripts/setup.mjs","build":"npm --prefix frontend run build","test":"node --test backend/core.test.js","test:integration":"node scripts/lexiflow-smoke.mjs"}}

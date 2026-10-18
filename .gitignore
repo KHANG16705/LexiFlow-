@@ -1,0 +1,10 @@
+﻿node_modules/
+frontend/dist/
+.env
+data/images/*
+!data/images/.gitkeep
+
+backups/
+nobka-start.log
+nobka-start-error.log
+

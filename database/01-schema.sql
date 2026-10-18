@@ -1,0 +1,40 @@
+CREATE TABLE IF NOT EXISTS topics (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ language ENUM('en','zh') NOT NULL,
+ name VARCHAR(120) NOT NULL,
+ created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+ UNIQUE KEY language_name(language,name),
+ UNIQUE KEY id_language(id,language)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS words (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ language ENUM('en','zh') NOT NULL,
+ topic_id INT UNSIGNED NOT NULL,
+ term VARCHAR(255) NOT NULL,
+ part_of_speech VARCHAR(80) NOT NULL DEFAULT '',
+ pronunciation VARCHAR(255) NOT NULL DEFAULT '',
+ meaning TEXT NOT NULL,
+ example TEXT NOT NULL,
+ translation TEXT NOT NULL,
+ image VARCHAR(255) NULL,
+ interval_days DOUBLE NOT NULL DEFAULT 0,
+ reviews INT NOT NULL DEFAULT 0,
+ due_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+ created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+ UNIQUE KEY topic_term(topic_id,term),
+ KEY topic_language(topic_id,language),
+ CONSTRAINT words_topic_language FOREIGN KEY(topic_id,language) REFERENCES topics(id,language) ON UPDATE RESTRICT ON DELETE RESTRICT
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS review_log (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ word_id INT UNSIGNED NOT NULL,
+ rating ENUM('again','hard','good','easy') NOT NULL,
+ reviewed_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+ due_at DATETIME(3) NOT NULL,
+ FOREIGN KEY(word_id) REFERENCES words(id) ON DELETE CASCADE
+) CHARACTER SET utf8mb4;
+CREATE TABLE IF NOT EXISTS schema_migrations (
+ version VARCHAR(80) PRIMARY KEY,
+ applied_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+) CHARACTER SET utf8mb4;
+INSERT IGNORE INTO schema_migrations(version) VALUES('0001_topics');
